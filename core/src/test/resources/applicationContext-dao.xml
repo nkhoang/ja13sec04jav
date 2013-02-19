@@ -2,34 +2,32 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
        http://www.springframework.org/schema/data/jpa
        http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+       http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
        "
        default-lazy-init="true">
     <context:component-scan base-package="com.hnk.aws"/>
-    <!-- repositories - spring-data -->
+    <!-- Scan for repositories - spring-data -->
     <jpa:repositories base-package="com.hnk.aws.repository"/>
-    <!-- validator -->
+    <!-- bean validation -->
     <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
 
-    <bean id="propertyConfigurer"
-          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="locations">
-            <value>classpath:db.yaml</value>
-        </property>
-        <property name="propertiesPersister" ref="persister"></property>
-    </bean>
+    <jdbc:initialize-database data-source="dataSource"
+                              ignore-failures="DROPS">
+        <jdbc:script location="classpath:sql/data.sql" />
+    </jdbc:initialize-database>
 
-    <bean id="persister" class="com.hnk.aws.util.YamlProperties" />
 
-    <!-- Datasource -->
-    <bean id="mainDbDS"
+    <bean id="dataSource"
           class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="${maindb.driverClassName}" />
         <property name="url" value="${maindb.url}" />
@@ -38,12 +36,12 @@
     </bean>
 
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-        <property name="persistenceUnitName" value="whatisayis" />
+        <property name="persistenceUnitName" value="pum" />
         <property name="packagesToScan" value="com.hnk.aws.model" />
-        <property name="dataSource" ref="mainDbDS" />
+        <property name="dataSource" ref="dataSource" />
         <property name="jpaVendorAdapter">
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-                <property name="databasePlatform" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
+                <property name="databasePlatform" value="${maindb.dialect}" />
                 <property name="showSql" value="true" />
                 <property name="generateDdl" value="true" />
             </bean>

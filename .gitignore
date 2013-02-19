@@ -1,5 +1,9 @@
 *.class
 
+# target folders #
+web/target/*
+core/target/*
+
 # IDE Files #
 *.iml
 .idea

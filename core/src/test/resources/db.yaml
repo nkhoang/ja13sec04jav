@@ -1,7 +1,0 @@
-maindb:
-  driverClassName: org.h2.Driver
-  url: jdbc:h2:mem:mainDB;DB_CLOSE_DELAY=-1;MODE=Oracle;TRACE_LEVEL_SYSTEM_OUT=2
-  user: sa
-  password: \"\"
-  dialect: org.hibernate.dialect.H2Dialect
-  hibernateHbm2ddl: create

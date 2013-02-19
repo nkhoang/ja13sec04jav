@@ -11,18 +11,20 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
+import javax.sql.DataSource;
 import javax.validation.Validator;
 import java.util.Date;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath*:applicationContext-dao.xml", "classpath*:applicationContext-service.xml"})
-public class UserDaoTest {
+public class UserDaoTest extends BaseDaoTest {
     private static final Logger LOG = LoggerFactory.getLogger(UserDaoTest.class.getCanonicalName());
     @Autowired
     private Validator validator;
@@ -43,25 +45,11 @@ public class UserDaoTest {
 
     @Test
     public void testLoadUserByName() {
-        User u = (User) userRepository.loadUserByUsername("user-01");
+        User u = (User) userRepository.loadUserByUsername("user01");
         Assert.assertNotNull(u);
         Assert.assertEquals("user01@user.com", u.getEmail());
     }
 
-    @Before
-    public void init() {
-        User u1 = new User();
-        u1.setUsername("user-01");
-        u1.setPassword(passwordEncoder.encodePassword("password" + u1.getUsername(), null));
-        u1.setEmail("user01@user.com");
-
-        User u2 = new User();
-        u2.setUsername("user-02");
-        u2.setPassword(passwordEncoder.encodePassword("password" + u1.getUsername(), null));
-        u2.setEmail("user02@user.com");
-
-        userRepository.save(u1);
-    }
 
     @Test
     public void testValidateUser() {

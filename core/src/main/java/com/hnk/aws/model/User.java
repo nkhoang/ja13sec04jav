@@ -2,42 +2,57 @@ package com.hnk.aws.model;
 
 import com.hnk.aws.model.validator.CheckPassword;
 import com.hnk.aws.model.validator.group.UserRegistrationCheck;
+import org.hibernate.annotations.*;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.persistence.AccessType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 @SuppressWarnings({"JpaAttributeTypeInspection"})
+@Table(name = "TBL_USER")
 @Entity
 /**
  * @author hnguyen
  */
+@Access(value = AccessType.FIELD)
 public class User extends BaseEntity implements Serializable, UserDetails {
-    @Override
     @Id
     @Column(name = "USER_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     public Long getId() {
-        return super.getId();
+        return id;
     }
 
-    @Override
     public void setId(Long id) {
-        super.setId(id);
+        this.id = id;
     }
 
+    @Column(name = "FIRST_NAME")
     @Basic
     @NotNull(groups = UserRegistrationCheck.class, message = "First name is required.")
     private String firstName;
+
+    @Column(name = "LAST_NAME")
     @Basic
     @NotNull(groups = UserRegistrationCheck.class, message = "Last name is required.")
     private String lastName;
+
+    @Column(name = "MIDDLE_NAME")
     @Basic
     private String middleName;
+
+    @Column(name = "USERNAME")
     @Basic
     @NotNull(groups = UserRegistrationCheck.class, message = "Username is required.")
     private String username;
@@ -60,13 +75,8 @@ public class User extends BaseEntity implements Serializable, UserDetails {
     private String issuePlace;
     @Basic
     private Date issueDate;
-    @Basic
-    private float customerValue;
 
-    @ElementCollection
-    private Set<String> roleNames;
-
-    // Spring required properties
+    @Column(columnDefinition = "boolean default true")
     @Basic
     private boolean enabled;
 
@@ -91,9 +101,9 @@ public class User extends BaseEntity implements Serializable, UserDetails {
     public Collection<GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>(0);
 
-        for (String s : roleNames) {
+        /*for (String s : roleNames) {
             authorities.add(new SimpleGrantedAuthority(s));
-        }
+        }*/
 
         return authorities;
     }
@@ -125,13 +135,6 @@ public class User extends BaseEntity implements Serializable, UserDetails {
         return enabled;
     }
 
-    public Set<String> getRoleNames() {
-        return roleNames;
-    }
-
-    public void setRoleNames(Set<String> roleNames) {
-        this.roleNames = roleNames;
-    }
 
     public void setUsername(String username) {
         this.username = username;
@@ -241,13 +244,6 @@ public class User extends BaseEntity implements Serializable, UserDetails {
         this.credentialExpired = credentialExpired;
     }
 
-    public float getCustomerValue() {
-        return customerValue;
-    }
-
-    public void setCustomerValue(float customerValue) {
-        this.customerValue = customerValue;
-    }
 
     public String getGender() {
         return gender;
