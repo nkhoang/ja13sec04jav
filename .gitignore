@@ -1,5 +1,11 @@
 *.class
 
+# MAC #
+.DS_Store
+
+# SASS cache #
+.sass-cache
+
 # target folders #
 web/target/*
 core/target/*
@@ -12,3 +18,5 @@ core/target/*
 *.jar
 *.war
 *.ear
+
+web/src/main/resources/production.properties
