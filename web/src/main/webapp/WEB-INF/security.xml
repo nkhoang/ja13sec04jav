@@ -19,6 +19,9 @@
         <intercept-url pattern="/index.html" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
         <!-- public resources -->
         <intercept-url pattern="/styles/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+        <intercept-url pattern="/css/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+        <intercept-url pattern="/js/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+        <intercept-url pattern="/img/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
         <!-- user registration page -->
         <intercept-url pattern="/user/register.html" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 
@@ -36,8 +39,8 @@
     </http>
     <!-- must have alias otherwise it will fail to detect exactly which authentication manager -->
     <authentication-manager alias="authenticationManager">
-
-        <authentication-provider user-service-ref="userDao">
+        <authentication-provider user-service-ref="userDao" >
+            <password-encoder ref="passwordEncoder" />
         </authentication-provider>
     </authentication-manager>
     <!-- method security -->

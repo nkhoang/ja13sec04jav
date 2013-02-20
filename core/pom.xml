@@ -11,7 +11,7 @@
     <parent>
         <artifactId>jav-aws</artifactId>
         <groupId>com.hnk.aws</groupId>
-        <version>1.0</version>
+        <version>1.001</version>
     </parent>
     <inceptionYear>2013</inceptionYear>
     <build>

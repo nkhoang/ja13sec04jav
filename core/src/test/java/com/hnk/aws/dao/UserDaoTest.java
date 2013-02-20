@@ -5,25 +5,21 @@ import com.hnk.aws.model.validator.group.UserRegistrationCheck;
 import com.hnk.aws.repository.UserRepository;
 import com.hnk.aws.util.ValidationUtils;
 import junit.framework.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
-import javax.sql.DataSource;
 import javax.validation.Validator;
 import java.util.Date;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath*:applicationContext-dao.xml", "classpath*:applicationContext-service.xml"})
+@ContextConfiguration(locations = {"classpath*:applicationContext-dao.xml", "classpath*:applicationContext-service" +
+        ".xml"})
 public class UserDaoTest extends BaseDaoTest {
     private static final Logger LOG = LoggerFactory.getLogger(UserDaoTest.class.getCanonicalName());
     @Autowired
@@ -64,5 +60,12 @@ public class UserDaoTest extends BaseDaoTest {
             LOG.info(String.format("Validation exception message: %s", e.getMessage()));
             // do nothing.
         }
+    }
+
+    @Test
+    public void testEncodePassword() {
+        String password = passwordEncoder.encodePassword("password", null);
+        LOG.info(String.format("Generated password: %s", password));
+        Assert.assertNotNull(password);
     }
 }

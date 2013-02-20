@@ -46,7 +46,7 @@
                 </executions>
                 <configuration>
                     <!--jrubyVersion>1.6.4</jrubyVersion-->
-                    <execArgs>/usr/bin/compass compile ${basedir}/src/main/webapp/compass</execArgs>
+                    <execArgs>C:/Ruby193/bin/compass compile ${basedir}/src/main/webapp/compass</execArgs>
                 </configuration>
             </plugin>
         </plugins>
@@ -64,6 +64,10 @@
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>

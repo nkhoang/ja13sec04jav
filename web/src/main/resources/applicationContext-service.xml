@@ -37,7 +37,7 @@
         <property name="locations">
             <list>
                 <value>classpath:encryption.properties</value>
-                <value>classpath:production.properties</value>
+                <value>classpath:db.properties</value>
             </list>
         </property>
         <property name="nullValue" value="null"/>
