@@ -1,4 +1,4 @@
-package com.hnk.aws.dao;
+package com.hnk.aws.dao.impl;
 
 import com.mysema.query.jpa.impl.JPAQuery;
 

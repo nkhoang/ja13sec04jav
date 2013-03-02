@@ -15,6 +15,7 @@
     </beans:bean>
 
     <http create-session="always">
+        <!-- auto configure for AnonymousAuthenticationFilter and AnonymousAuthenticationProvider -->
         <anonymous/>
         <intercept-url pattern="/index.html" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
         <!-- public resources -->

@@ -1,6 +1,6 @@
 package com.hnk.aws.repository;
 
-import com.hnk.aws.dao.BaseDaoImpl;
+import com.hnk.aws.dao.impl.BaseDaoImpl;
 import com.hnk.aws.dao.UserDao;
 import com.hnk.aws.model.QUser;
 import com.hnk.aws.model.User;
