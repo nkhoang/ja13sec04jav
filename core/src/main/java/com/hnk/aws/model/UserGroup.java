@@ -14,7 +14,7 @@ import java.util.Set;
 @Entity
 @Table(name = UserGroup.TABLE_NAME)
 public class UserGroup extends IdEntity {
-    public static final String TABLE_NAME = "USER_GROUP";
+    public static final String TABLE_NAME = "TBL_USER_GROUP";
     @Basic
     @Column(name = "group_name")
     private String name;

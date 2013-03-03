@@ -14,6 +14,7 @@
         </beans:property>
     </beans:bean>
 
+
     <http create-session="always">
         <!-- auto configure for AnonymousAuthenticationFilter and AnonymousAuthenticationProvider -->
         <anonymous/>
@@ -30,7 +31,7 @@
         <intercept-url pattern="/ws/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
         <intercept-url pattern="/remote_api*/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_ADMIN,ROLE_USER"/>
         <intercept-url pattern="/_ah/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
-        <intercept-url pattern="/**" access="ROLE_ADMIN,ROLE_USER"/>
+        <intercept-url pattern="/**" access="ROLE_ADMIN,ROLE_USER" />
 
         <logout logout-url="/logout.html" logout-success-url="/login.html?loggedout=true"/>
         <form-login login-page="/index.html"

@@ -35,4 +35,10 @@ public class UserGroupDaoTest {
         Assert.assertEquals(1, groups.size());
     }
 
+    @Test
+    public void testGetAllGroups() {
+        Assert.assertNotNull(userGroupRepository.listAllGroups());
+        Assert.assertEquals(1, userGroupRepository.listAllGroups().size());
+    }
+
 }
