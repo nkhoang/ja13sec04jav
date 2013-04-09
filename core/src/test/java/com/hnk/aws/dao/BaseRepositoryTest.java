@@ -1,14 +1,9 @@
 package com.hnk.aws.dao;
 
-import junit.framework.Assert;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.sql.DataSource;
 import java.sql.Statement;
@@ -17,8 +12,8 @@ import java.sql.Statement;
  * @author hnguyen
  */
 
-public class BaseDaoTest {
-    private static final Logger LOG = LoggerFactory.getLogger(BaseDaoTest.class.getCanonicalName());
+public class BaseRepositoryTest {
+    private static final Logger LOG = LoggerFactory.getLogger(BaseRepositoryTest.class.getCanonicalName());
 
     /**
      * Execute SQL scripts in file specified by {@code sqlPath}.

@@ -5,62 +5,91 @@
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:jpa="http://www.springframework.org/schema/data/jpa"
        xmlns:jdbc="http://www.springframework.org/schema/jdbc"
-       xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
        http://www.springframework.org/schema/data/jpa
        http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
-       http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd
-       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
-       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
-       "
+       http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.2.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd"
        default-lazy-init="true">
     <context:component-scan base-package="com.hnk.aws"/>
     <!-- Scan for repositories - spring-data -->
-    <jpa:repositories base-package="com.hnk.aws.repository"/>
+    <jpa:repositories base-package="com.hnk.aws.repository">
+        <jpa:repository id="UserRepository" entity-manager-factory-ref="mainEntityManagerFactory"
+                        transaction-manager-ref="mainTx" />
+        <jpa:repository id="UserGroupRepository" entity-manager-factory-ref="mainEntityManagerFactory"
+                        transaction-manager-ref="mainTx" />
+        <jpa:repository id="UserLogRepository" entity-manager-factory-ref="mainEntityManagerFactory"
+                        transaction-manager-ref="logTx" />
+            </jpa:repositories>
     <!-- bean validation -->
     <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
 
-    <jdbc:initialize-database data-source="dataSource"
+    <jdbc:initialize-database data-source="mainDS"
                               ignore-failures="DROPS">
-        <jdbc:script location="classpath:sql/data.sql" />
+        <jdbc:script location="classpath:sql/data.sql"/>
     </jdbc:initialize-database>
 
 
-    <bean id="dataSource"
+    <bean id="mainDS"
           class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="${maindb.driverClassName}" />
-        <property name="url" value="${maindb.url}" />
-        <property name="username" value="${maindb.user}" />
-        <property name="password" value="${maindb.password}" />
+        <property name="driverClassName" value="${maindb.driverClassName}"/>
+        <property name="url" value="${maindb.url}"/>
+        <property name="username" value="${maindb.user}"/>
+        <property name="password" value="${maindb.password}"/>
     </bean>
 
-    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-        <property name="persistenceUnitName" value="pum" />
-        <property name="packagesToScan" value="com.hnk.aws.model" />
-        <property name="dataSource" ref="dataSource" />
+    <bean id="logDS"
+          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${logdb.driverClassName}"/>
+        <property name="url" value="${logdb.url}"/>
+        <property name="username" value="${logdb.user}"/>
+        <property name="password" value="${logdb.password}"/>
+    </bean>
+
+
+    <bean id="mainEntityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceUnitName" value="pum"/>
+        <property name="packagesToScan" value="com.hnk.aws.model"/>
+        <property name="dataSource" ref="mainDS"/>
         <property name="jpaVendorAdapter">
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-                <property name="databasePlatform" value="${maindb.dialect}" />
-                <property name="showSql" value="true" />
-                <property name="generateDdl" value="true" />
+                <property name="databasePlatform" value="${maindb.dialect}"/>
+                <property name="showSql" value="true"/>
+                <property name="generateDdl" value="true"/>
             </bean>
         </property>
     </bean>
 
-
-    <!-- Spring Transaction Management -->
-    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    <bean id="logEntityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceUnitName" value="logpum"/>
+        <property name="packagesToScan" value="com.hnk.aws.model"/>
+        <property name="dataSource" ref="logDS"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="databasePlatform" value="${logdb.dialect}"/>
+                <property name="showSql" value="true"/>
+                <property name="generateDdl" value="true"/>
+            </bean>
+        </property>
     </bean>
-
+    <!-- Spring Transaction Management -->
+    <bean id="mainTx" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="mainEntityManagerFactory"/>
+        <qualifier value="mainTx"/>
+    </bean>
+    <bean id="logTx" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="logEntityManagerFactory"/>
+        <qualifier value="logTx"/>
+    </bean>
     <!-- turn any exception into DataAccessException -->
     <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
     <!-- enable @PersistenceContext -->
     <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
     <!-- enable annotation -->
+    <tx:annotation-driven transaction-manager="logTx"/>
+    <tx:annotation-driven transaction-manager="mainTx"/>
     <context:annotation-config/>
-    <!-- enable transaction management in spring -->
-    <tx:annotation-driven transaction-manager="transactionManager"/>
 </beans>
 

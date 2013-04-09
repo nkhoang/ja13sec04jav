@@ -15,4 +15,15 @@
             <property name="datanucleus.ConnectionURL" value="appengine"/>
         </properties>
     </persistence-unit>
+    <persistence-unit name="logpum">
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+        <class>com.hnk.aws.model.User</class>
+        <class>com.hnk.aws.model.UserRole</class>
+        <class>com.hnk.aws.model.UserGroup</class>
+        <properties>
+            <property name="datanucleus.NontransactionalRead" value="true"/>
+            <property name="datanucleus.NontransactionalWrite" value="true"/>
+            <property name="datanucleus.ConnectionURL" value="appengine"/>
+        </properties>
+    </persistence-unit>
 </persistence>

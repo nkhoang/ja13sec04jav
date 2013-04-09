@@ -2,14 +2,10 @@ package com.hnk.aws.model;
 
 import com.hnk.aws.model.validator.CheckPassword;
 import com.hnk.aws.model.validator.group.UserRegistrationCheck;
-import org.hibernate.annotations.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.persistence.AccessType;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -29,6 +25,10 @@ public class User extends BaseEntity implements Serializable, UserDetails {
     @Column(name = "USER_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Version
+    @Column(name = "TRACKING_DATE")
+    private Date trackingDate;
 
     public Long getId() {
         return id;
@@ -259,5 +259,18 @@ public class User extends BaseEntity implements Serializable, UserDetails {
 
     public void setPersonalIdType(String personalIdType) {
         this.personalIdType = personalIdType;
+    }
+
+    public Date getTrackingDate() {
+        return trackingDate;
+    }
+
+    public void setTrackingDate(Date trackingDate) {
+        this.trackingDate = trackingDate;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        trackingDate = new Date();
     }
 }

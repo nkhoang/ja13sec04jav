@@ -9,7 +9,7 @@ import javax.persistence.PersistenceContext;
  * @author hnguyen
  */
 public class BaseDaoImpl {
-    @PersistenceContext
+    @PersistenceContext(unitName = "pum")
     protected EntityManager entityManager;
     protected JPAQuery query;
 
