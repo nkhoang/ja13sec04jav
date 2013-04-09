@@ -43,7 +43,7 @@ public class UserServiceTest {
             LOG.debug("Total users: " + result.size());
             LOG.debug("Total user logs: " + userLogs.size());
             Assert.assertNotNull(result);
-            Assert.assertEquals(11, result.size());
+            Assert.assertEquals(1, result.size());
         }
     }
 }
