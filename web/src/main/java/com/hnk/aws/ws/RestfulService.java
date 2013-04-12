@@ -12,7 +12,7 @@ import javax.ws.rs.core.MediaType;
 @Service(value = "restfulService")
 @Path("/")
 public class RestfulService {
-    private static Logger LOG = LoggerFactory.getLogger(WebToolService.class.getCanonicalName());
+    private static Logger LOG = LoggerFactory.getLogger(RestfulService.class.getCanonicalName());
 
     @GET
     @Path("hello")

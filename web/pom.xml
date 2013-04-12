@@ -46,7 +46,7 @@
                 </executions>
                 <configuration>
                     <!--jrubyVersion>1.6.4</jrubyVersion-->
-                    <execArgs>C:/Ruby193/bin/compass compile ${basedir}/src/main/webapp/compass</execArgs>
+                    <execArgs>/usr/bin/compass compile ${basedir}/src/main/webapp/compass</execArgs>
                 </configuration>
             </plugin>
         </plugins>

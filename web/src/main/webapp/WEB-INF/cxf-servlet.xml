@@ -15,9 +15,8 @@
 
     <jaxrs:server address="/">
         <jaxrs:serviceBeans>
-            <ref bean="userWS"/>
+            <ref bean="userResource"/>
             <ref bean="restfulService"/>
-            <ref bean="webToolService"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <ref bean="jsonProvider"/>
