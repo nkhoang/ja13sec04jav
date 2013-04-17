@@ -2,7 +2,7 @@
 <beans:beans xmlns="http://www.springframework.org/schema/security"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xmlns:beans="http://www.springframework.org/schema/beans"
-             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
               http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
     <beans:bean class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler"/>
     <beans:bean id="securityContextPersistenceFilter"
@@ -13,7 +13,8 @@
             </beans:bean>
         </beans:property>
     </beans:bean>
-
+    <!-- for google security -->
+    <beans:import resource="google_security.xml" />
 
     <http create-session="always">
         <!-- auto configure for AnonymousAuthenticationFilter and AnonymousAuthenticationProvider -->
@@ -31,7 +32,7 @@
         <!-- jax-rs interface -->
         <intercept-url pattern="/ws/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 
-        <intercept-url pattern="/**" access="ROLE_ADMIN,ROLE_USER" />
+        <intercept-url pattern="/**" access="ROLE_ADMIN,ROLE_USER"/>
 
         <logout logout-url="/logout.html" logout-success-url="/login.html?loggedout=true"/>
         <form-login login-page="/index.html"
@@ -41,11 +42,12 @@
     </http>
     <!-- must have alias otherwise it will fail to detect exactly which authentication manager -->
     <authentication-manager alias="authenticationManager">
-        <authentication-provider user-service-ref="userDao" >
-            <password-encoder ref="passwordEncoder" />
+        <authentication-provider user-service-ref="userDao">
+            <password-encoder ref="passwordEncoder"/>
         </authentication-provider>
     </authentication-manager>
     <!-- method security -->
     <global-method-security pre-post-annotations="enabled"/>
+
 
 </beans:beans>

@@ -36,11 +36,6 @@
                 <executions>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>com.google.appengine</groupId>
-                <artifactId>appengine-maven-plugin</artifactId>
-                <version>${appengine-maven-plugin.version}</version>
-            </plugin>
             <!-- ########################################################### -->
             <!--                    QUERY DSL                                -->
             <!-- ########################################################### -->
@@ -485,6 +480,12 @@
                 <groupId>org.yaml</groupId>
                 <artifactId>snakeyaml</artifactId>
                 <version>1.11</version>
+            </dependency>
+            <!-- GOOGLE -->
+            <dependency>
+                <groupId>com.google.api-client</groupId>
+                <artifactId>google-api-client</artifactId>
+                <version>1.14.1-beta</version>
             </dependency>
             <!-- ########################################################### -->
             <!--                      UTILS                                  -->

@@ -235,6 +235,11 @@
             <type>gem</type>
         </dependency>
 
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+
         <!-- html parser -->
         <dependency>
             <groupId>net.htmlparser.jericho</groupId>

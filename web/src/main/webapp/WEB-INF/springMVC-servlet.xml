@@ -36,6 +36,11 @@
                         class="org.springframework.web.servlet.view.InternalResourceViewResolver">
                     <property name="prefix" value="/WEB-INF/pages/"/>
                     <property name="suffix" value=".jsp"/>
+                    <property name="exposedContextBeanNames">
+                        <list>
+                            <value>thirdPartyGoogle</value>
+                        </list>
+                    </property>
                 </bean>
             </list>
         </property>

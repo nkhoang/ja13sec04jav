@@ -1,14 +1,13 @@
 Ext.define('App.ux.Login', {
     extend : 'Ext.container.Container',
     alias : 'widget.loginPanel',
-    layout:{
-        type:'vbox',
-        align:'center'
+    layout : {
+        type : 'vbox',
+        align : 'center'
     },
     initComponent : function () {
         var me = this;
         Ext.applyIf(me, {
-
             items : [
                 {
                     xtype : 'form',
@@ -36,12 +35,12 @@ Ext.define('App.ux.Login', {
                         },
                         {
                             allowBlank : false,
-                            fieldLabel : 'User ID',
+                            fieldLabel : 'Username',
                             itemId : 'txtUsername',
                             name : 'j_username',
                             stateful : true,
                             stateId : 'username',
-                            emptyText : 'User name',
+                            emptyText : 'Your username',
                             enableKeyEvents : true,
                             listeners : {
                                 keydown : function (field, e, eOpts) {
@@ -77,7 +76,7 @@ Ext.define('App.ux.Login', {
                             }
                         },
                         {
-                            text : 'Login',
+                            text : 'Let me in',
                             itemId : 'btnLogin',
                             disabled : true,
                             formBind : true,
@@ -114,7 +113,18 @@ Ext.define('App.ux.Login', {
                 },
                 {
                     xtype : 'container',
-                    style: 'text-align: center;',
+                    height: 30,
+                    items : [
+                        {
+                            xtype : 'container',
+                            itemId: 'googleLoginBtn',
+                            html : '<a id="googleLoginLink" href="#"><img src="/img/login-google.png" /></a>'
+                        }
+                    ]
+                },
+                {
+                    xtype : 'container',
+                    style : 'text-align: center;',
                     html : 'Copyright &copy;2013.'
                 }
             ]

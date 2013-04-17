@@ -10,7 +10,22 @@
     <script type="text/javascript">
         Ext.onReady(function() {
             Ext.create('App.ux.Login', {
-                renderTo: 'loginForm'
+                renderTo: 'loginForm',
+                listeners: {
+                    // rebuild third party google login link.
+                    render: function() {
+                        var me = this;
+                        var btn = me.down('#googleLoginBtn');
+                        var btnDom = Ext.getDom(btn.getId());
+                        var aEl = Ext.dom.Query.selectNode('a#googleLoginLink', btnDom);
+                        aEl.href =
+                            'https://accounts.google.com/o/oauth2/auth?' +
+                            'response_type=${thirdPartyGoogle.responseType}&' +
+                            'client_id=${thirdPartyGoogle.clientId}&' +
+                            'redirect_uri=${thirdPartyGoogle.redirectUrl}&' +
+                            'scope=${thirdPartyGoogle.scope}';
+                    }
+                }
             });
         });
 
