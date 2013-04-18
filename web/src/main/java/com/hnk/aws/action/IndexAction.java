@@ -13,7 +13,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/")
 public class IndexAction {
-    @RequestMapping("/index")
+    @RequestMapping("index")
     public ModelAndView welcome() {
         // load user authentication
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

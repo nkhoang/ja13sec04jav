@@ -28,6 +28,10 @@
         </property>
     </bean>
 
+    <!-- handling static resources -->
+    <mvc:resources mapping="/resource/**" location="/resources" />
+    <mvc:default-servlet-handler/>
+
     <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
         <property name="viewResolvers">
             <list>

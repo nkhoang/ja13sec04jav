@@ -19,15 +19,13 @@
     <http create-session="always">
         <!-- auto configure for AnonymousAuthenticationFilter and AnonymousAuthenticationProvider -->
         <anonymous/>
-        <intercept-url pattern="/index.html" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+
+        <intercept-url pattern="/favicon.ico" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+        <intercept-url pattern="/index*" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
         <!-- public resources -->
-        <intercept-url pattern="/styles/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
-        <intercept-url pattern="/css/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
-        <intercept-url pattern="/js/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
-        <intercept-url pattern="/img/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
         <intercept-url pattern="/resources/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
         <!-- user registration page -->
-        <intercept-url pattern="/user/register.html" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+        <intercept-url pattern="/user/register*" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
         <!-- thirdparty redirects -->
         <intercept-url pattern="/redirect/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 

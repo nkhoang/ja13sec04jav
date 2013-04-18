@@ -13,11 +13,11 @@ import java.util.Properties;
  * @author hnguyen
  */
 @Controller
-@RequestMapping("redirect")
+@RequestMapping("/redirect")
 public class RedirectAction {
     @Autowired
     Properties thirdPartyGoogle;
-    @RequestMapping("/googleLogin")
+    @RequestMapping("googleLogin")
     public String redirectGoogleLogin() {
         // forming google login
         /*'https://accounts.google.com/o/oauth2/auth?' +
