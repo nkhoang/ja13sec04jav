@@ -18,12 +18,7 @@
                         var btn = me.down('#googleLoginBtn');
                         var btnDom = Ext.getDom(btn.getId());
                         var aEl = Ext.dom.Query.selectNode('a#googleLoginLink', btnDom);
-                        aEl.href =
-                            'https://accounts.google.com/o/oauth2/auth?' +
-                            'response_type=${thirdPartyGoogle.responseType}&' +
-                            'client_id=${thirdPartyGoogle.clientId}&' +
-                            'redirect_uri=${thirdPartyGoogle.redirectUrl}&' +
-                            'scope=${thirdPartyGoogle.scope}';
+                        aEl.href = '<c:url value="/redirect/googleLogin" />';
                     }
                 }
             });

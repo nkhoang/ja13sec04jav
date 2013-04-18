@@ -4,16 +4,18 @@
              xmlns:beans="http://www.springframework.org/schema/beans"
              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
               http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+    <!-- configure authentication processing filter -->
     <http pattern="/oauth2" authentication-manager-ref="googleAuthenticationManager">
         <custom-filter ref="googleAuthenticationFilter" position="BASIC_AUTH_FILTER"/>
         <form-login login-page="/oauth2"
                     authentication-failure-url="/index.html?error=true"
                     login-processing-url="/login_check.html" default-target-url="/login.html"/>
     </http>
+    <!-- authentication providers -->
     <beans:bean id="googleAuthenticationProvider"
                 class="com.hnk.aws.web.security.google.GoogleAuthenticationProvider">
     </beans:bean>
-
+    <!-- authentication manager -->
     <beans:bean id="googleAuthenticationManager" class="org.springframework.security.authentication.ProviderManager">
         <beans:property name="providers">
             <beans:list>
@@ -24,10 +26,7 @@
     <beans:bean id="googleAuthenticationFilter"
                 class="com.hnk.aws.web.security.google.GoogleAuthenticationProcessingFilter">
         <beans:property name="filterProcessesUrl" value="/oauth2"/>
-        <beans:property name="tokenParameter" value="access_token" />
+        <beans:property name="tokenParameter" value="access_token"/>
         <beans:property name="authenticationManager" ref="googleAuthenticationManager"/>
-
     </beans:bean>
-
-
 </beans:beans>

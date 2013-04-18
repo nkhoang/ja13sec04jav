@@ -49,9 +49,6 @@ public class GoogleAuthenticationProvider implements AuthenticationProvider {
             HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
             connection.setDoOutput(true);
             connection.setDoInput(true);
-            // connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
-            // connection.setRequestProperty("Accept", "*/*");
-            /// connection.setRequestProperty("X-Requested-With", "XMLHttpRequest");
             connection.setRequestMethod("GET");
 
             InputStream is = connection.getInputStream();

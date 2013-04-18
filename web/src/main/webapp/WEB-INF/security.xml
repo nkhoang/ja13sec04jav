@@ -28,6 +28,8 @@
         <intercept-url pattern="/resources/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
         <!-- user registration page -->
         <intercept-url pattern="/user/register.html" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+        <!-- thirdparty redirects -->
+        <intercept-url pattern="/redirect/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 
         <!-- jax-rs interface -->
         <intercept-url pattern="/ws/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
