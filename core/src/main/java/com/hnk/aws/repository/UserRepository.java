@@ -8,4 +8,5 @@ import org.springframework.data.repository.CrudRepository;
  * @author hnguyen
  */
 public interface UserRepository extends CrudRepository<User, Long>, UserDao {
+    public User findByEmail(String email);
 }

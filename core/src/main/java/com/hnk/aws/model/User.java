@@ -52,7 +52,8 @@ public class User extends BaseEntity implements Serializable, UserDetails {
 
     private String gender;
 
-    @OneToOne(optional = false, fetch = FetchType.EAGER, targetEntity = Account.class, mappedBy = "user")
+    @OneToOne(cascade = CascadeType.ALL, targetEntity = Account.class, fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "ACCOUNT_ID", referencedColumnName = "ACCOUNT_ID", unique = true, nullable = false)
     private Account account;
 
     @Transient

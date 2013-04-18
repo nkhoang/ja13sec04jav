@@ -1,8 +1,10 @@
 package com.hnk.aws.service.impl;
 
+import com.hnk.aws.model.Account;
 import com.hnk.aws.model.User;
 import com.hnk.aws.model.UserGroup;
 import com.hnk.aws.model.UserLog;
+import com.hnk.aws.repository.AccountRepository;
 import com.hnk.aws.repository.UserGroupRepository;
 import com.hnk.aws.repository.UserLogRepository;
 import com.hnk.aws.repository.UserRepository;
@@ -31,6 +33,22 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UserLogRepository userLogRepository;
+    @Autowired
+    private AccountRepository accountRepository;
+
+    /**
+     * {@inheritDoc}
+     */
+    public Account createUserAccount(User user, Account.AccountType accountType) {
+        Account account = new Account();
+        account.setAccountType(accountType);
+        account.setUser(user);
+        user.setAccount(account);
+
+        userRepository.save(user);
+
+        return account;
+    }
 
     @Override
     public List<UserGroup> listAllGroups() {
@@ -63,5 +81,22 @@ public class UserServiceImpl implements UserService {
             users.add(userIterator.next());
         }
         return users;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public User findByUsername(String username) {
+        return userRepository.findByEmail(username);
+
+    }
+
+    public List<Account> listAccounts() {
+        Iterator<Account> accountIterator = accountRepository.findAll().iterator();
+        List<Account> accountList = new ArrayList<Account>();
+        while (accountIterator.hasNext()) {
+            accountList.add(accountIterator.next());
+        }
+        return accountList;
     }
 }

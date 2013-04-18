@@ -1,4 +1,4 @@
-package com.hnk.aws.repository;
+package com.hnk.aws.repository.impl;
 
 import com.hnk.aws.dao.UserDao;
 import com.hnk.aws.dao.impl.BaseDaoImpl;
@@ -18,12 +18,14 @@ public class UserRepositoryImpl extends BaseDaoImpl implements UserDao {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+
     /**
-     * load user by username.
+     * Load user by username. For Spring authorization.
      *
      * @param email
      * @return
      * @throws org.springframework.security.core.userdetails.UsernameNotFoundException
+     *
      */
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         QUser user = QUser.user;

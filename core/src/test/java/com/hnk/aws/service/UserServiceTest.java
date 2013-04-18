@@ -1,5 +1,6 @@
 package com.hnk.aws.service;
 
+import com.hnk.aws.model.Account;
 import com.hnk.aws.model.User;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -28,5 +29,15 @@ public class UserServiceTest {
     public void testSaveUser() {
         User savedUser = userService.save("nkhoang.it", "password");
         Assert.assertNotNull(savedUser);
+    }
+
+    @Test
+    public void testCreateUserAccount() {
+        User user = userService.findByUsername("user01@user.com");
+        Assert.assertNotNull(user);
+
+        userService.createUserAccount(user, Account.AccountType.GOOGLE);
+        // check saved Account
+        Assert.assertTrue("Incorrect total accounts", userService.listAccounts().size() >= 1);
     }
 }

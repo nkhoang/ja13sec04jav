@@ -21,10 +21,10 @@ public class Account extends BaseEntity {
 
 
     @Column(name = "ACCOUNT_TYPE")
+    @Enumerated(EnumType.STRING)
     private AccountType accountType;
 
-    @OneToOne(cascade = CascadeType.ALL, targetEntity = User.class, fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID", unique = true, nullable = false)
+    @OneToOne(fetch = FetchType.EAGER, targetEntity = User.class, mappedBy = "account")
     private User user;
 
     private Boolean accountLocked;

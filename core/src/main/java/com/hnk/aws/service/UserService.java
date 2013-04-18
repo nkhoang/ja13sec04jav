@@ -3,6 +3,7 @@
 //
 package com.hnk.aws.service;
 
+import com.hnk.aws.model.Account;
 import com.hnk.aws.model.User;
 import com.hnk.aws.model.UserGroup;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,15 @@ import java.util.List;
  */
 @Transactional
 public interface UserService {
+    /**
+     * Createa a new user account.
+     *
+     * @param user        the {@code User}.
+     * @param accountType the account type.
+     * @return a newly created {@code Account}.
+     */
+    public Account createUserAccount(User user, Account.AccountType accountType);
+
     /**
      * List all groups.
      *
@@ -38,4 +48,16 @@ public interface UserService {
      * @return a list of users.
      */
     public List<User> list();
+
+    /**
+     * Find by username
+     */
+    public User findByUsername(String username);
+
+    /**
+     * List all accounts.
+     *
+     * @return a list of db accounts.
+     */
+    public List<Account> listAccounts();
 }
