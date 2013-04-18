@@ -17,14 +17,16 @@ import java.util.Properties;
 public class RedirectAction {
     @Autowired
     Properties thirdPartyGoogle;
+
     @RequestMapping("googleLogin")
     public String redirectGoogleLogin() {
-        // forming google login
-        /*'https://accounts.google.com/o/oauth2/auth?' +
-                'response_type=${thirdPartyGoogle.responseType}&' +
-                'client_id=${thirdPartyGoogle.clientId}&' +
-                'redirect_uri=${thirdPartyGoogle.redirectUrl}&' +
-                'scope=${thirdPartyGoogle.scope}';*/
-        return "redirect:" + "http://google.com";
+        // forming redirect URL.
+        StringBuilder sb = new StringBuilder();
+        sb.append("https://accounts.google.com/o/oauth2/auth?");
+        sb.append("response_type=" + thirdPartyGoogle.get("responseType"));
+        sb.append("&client_id=" + thirdPartyGoogle.get("clientId"));
+        sb.append("&redirect_uri=" + thirdPartyGoogle.get("redirectUrl"));
+        sb.append("&scope=" + thirdPartyGoogle.get("scope"));
+        return "redirect:" + sb.toString();
     }
 }

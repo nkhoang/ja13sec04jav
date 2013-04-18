@@ -11,8 +11,8 @@ import org.springframework.security.core.AuthenticationException;
  *
  * @author hnguyen
  */
-public class BadTokenException extends AuthenticationException {
-    public BadTokenException(String message) {
+public class BadCodeException extends AuthenticationException {
+    public BadCodeException(String message) {
         super(message);
     }
 }

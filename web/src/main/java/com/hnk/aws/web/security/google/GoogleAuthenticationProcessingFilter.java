@@ -21,13 +21,23 @@ import java.io.IOException;
  * <p/>
  * For more information:
  * <a href="https://developers.google.com/accounts/docs/OAuth2WebServer">https://developers.google.com/accounts/docs/OAuth2WebServer</a>
+ * <p/>
+ * Error response will be:
+ * <p/>
+ * https://oauth2-login-demo.appspot.com/code?error=access_denied&state=/profile
+ * <p/>
+ * Success response will be:
+ * <p/>
+ * https://oauth2-login-demo.appspot.com/code?state=/profile&code=4/P7q7W91a-oMsCeLvIaQm6bTrgtp7
  *
  * @author hnguyen
  */
 public class GoogleAuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
-    private static final String SPRING_SECURITY_GOOGLE_TOKEN_KEY = "token";
+    private static final String SPRING_SECURITY_GOOGLE_CODE_KEY = "code";
+    private static final String SPRING_SECURITY_GOOGLE_STATE_KEY = "state";
 
-    private String tokenParameter = SPRING_SECURITY_GOOGLE_TOKEN_KEY;
+    private String codeParameter = SPRING_SECURITY_GOOGLE_CODE_KEY;
+    private String stateParameter = SPRING_SECURITY_GOOGLE_STATE_KEY;
 
     public GoogleAuthenticationProcessingFilter() {
         super("/oauth2");
@@ -35,13 +45,18 @@ public class GoogleAuthenticationProcessingFilter extends AbstractAuthentication
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
-        String tokenString = request.getParameter(tokenParameter);
-        GoogleAuthenticationToken token = new GoogleAuthenticationToken(tokenString);
+        // save the 'code' value to verify.
+        String codeString = request.getParameter(codeParameter);
+        GoogleAuthenticationToken token = new GoogleAuthenticationToken(codeString);
 
         return this.getAuthenticationManager().authenticate(token);
     }
 
-    public void setTokenParameter(String tokenParameter) {
-        this.tokenParameter = tokenParameter;
+    public void setCodeParameter(String codeParameter) {
+        this.codeParameter = codeParameter;
+    }
+
+    public void setStateParameter(String stateParameter) {
+        this.stateParameter = stateParameter;
     }
 }

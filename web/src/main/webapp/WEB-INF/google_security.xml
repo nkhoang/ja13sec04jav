@@ -26,7 +26,6 @@
     <beans:bean id="googleAuthenticationFilter"
                 class="com.hnk.aws.web.security.google.GoogleAuthenticationProcessingFilter">
         <beans:property name="filterProcessesUrl" value="/oauth2"/>
-        <beans:property name="tokenParameter" value="access_token"/>
         <beans:property name="authenticationManager" ref="googleAuthenticationManager"/>
     </beans:bean>
 </beans:beans>

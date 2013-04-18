@@ -9,6 +9,7 @@ import com.hnk.aws.repository.UserRepository;
 import com.hnk.aws.service.UserService;
 import org.apache.commons.lang.time.DateUtils;
 import org.jasypt.spring.security3.PasswordEncoder;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
@@ -41,8 +42,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User save(String userName, String password) {
         User u = new User();
-        u.setBirthDate(new Date());
-        u.setUsername(userName);
+        u.setBirthDate(new DateTime());
         u.setPassword(passwordEncoder.encodePassword(password, null));
 
         User savedU = userRepository.save(u);
@@ -60,9 +60,6 @@ public class UserServiceImpl implements UserService {
             save("nkhoang.it", "password");
         }
         User user = userRepository.findOne(1L);
-        Date date = new Date();
-        Date newDate = DateUtils.addDays(date, -10);
-        user.setTrackingDate(newDate);
         userRepository.save(user);
     }
 
