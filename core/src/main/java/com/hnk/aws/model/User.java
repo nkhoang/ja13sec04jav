@@ -2,6 +2,8 @@ package com.hnk.aws.model;
 
 import com.hnk.aws.model.validator.CheckPassword;
 import com.hnk.aws.model.validator.group.UserRegistrationCheck;
+import org.hibernate.annotations.Type;
+import org.joda.time.DateTime;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -10,15 +12,15 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
-@SuppressWarnings({"JpaAttributeTypeInspection"})
-@Table(name = "TBL_USER")
-@Entity
+
 /**
  * @author hnguyen
  */
+@SuppressWarnings({"JpaAttributeTypeInspection"})
+@Table(name = "TBL_USER")
+@Entity
 @Access(value = AccessType.FIELD)
 public class User extends BaseEntity implements Serializable, UserDetails {
     @Id
@@ -26,76 +28,32 @@ public class User extends BaseEntity implements Serializable, UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Version
-    @Column(name = "TRACKING_DATE")
-    private Date trackingDate;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     @Column(name = "FIRST_NAME")
-    @Basic
     @NotNull(groups = UserRegistrationCheck.class, message = "First name is required.")
     private String firstName;
 
     @Column(name = "LAST_NAME")
-    @Basic
     @NotNull(groups = UserRegistrationCheck.class, message = "Last name is required.")
     private String lastName;
 
     @Column(name = "MIDDLE_NAME")
-    @Basic
     private String middleName;
 
-    @Column(name = "USERNAME")
-    @Basic
-    @NotNull(groups = UserRegistrationCheck.class, message = "Username is required.")
-    private String username;
-    @Basic
     @CheckPassword(groups = UserRegistrationCheck.class)
     private String password;
-    @Basic
+
     private String email;
-    @Basic
+
     private String phoneNumber;
-    @Basic
-    private Date birthDate;
-    @Basic
+
+    @Column(name = "BIRTH_DATE")
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+    private DateTime birthDate;
+
     private String gender;
-    @Basic
-    private String personalId;
-    @Basic
-    private String personalIdType;
-    @Basic
-    private String issuePlace;
-    @Basic
-    private Date issueDate;
 
-    @Column(columnDefinition = "boolean default true")
-    @Basic
-    private boolean enabled;
-
-    @Transient
-    private boolean accountExpired;
-    @Transient
-    private boolean accountLocked;
-    @Transient
-    private boolean credentialExpired;
-
-    public enum PersonalIdType {
-        CIVIL,
-        VISA
-    }
-
-    public enum CustomerGender {
-        MALE,
-        FEMALE
-    }
+    @OneToOne(optional = false, fetch = FetchType.EAGER, targetEntity = Account.class, mappedBy = "user")
+    private Account account;
 
     @Transient
     public Collection<GrantedAuthority> getAuthorities() {
@@ -112,40 +70,38 @@ public class User extends BaseEntity implements Serializable, UserDetails {
         return password;
     }
 
+    @Override
     public String getUsername() {
-        return username;
+        return email;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Transient
+    @Override
     public boolean isAccountNonExpired() {
-        return !accountLocked;
+        return !account.getAccountExpired();
+        // Templates.
     }
 
-    @Transient
+    @Override
     public boolean isAccountNonLocked() {
-        return !accountLocked;
+        return !account.getAccountLocked();
     }
 
-    @Transient
+    @Override
     public boolean isCredentialsNonExpired() {
-        return !credentialExpired;
+        return false;
     }
 
+    @Override
     public boolean isEnabled() {
-        return enabled;
+        return account.getEnabled();
     }
 
-
-    public void setUsername(String username) {
-        this.username = username;
+    public Long getId() {
+        return id;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getFirstName() {
@@ -172,6 +128,10 @@ public class User extends BaseEntity implements Serializable, UserDetails {
         this.middleName = middleName;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -188,63 +148,6 @@ public class User extends BaseEntity implements Serializable, UserDetails {
         this.phoneNumber = phoneNumber;
     }
 
-    public Date getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(Date birthDate) {
-        this.birthDate = birthDate;
-    }
-
-    public String getPersonalId() {
-        return personalId;
-    }
-
-    public void setPersonalId(String personalId) {
-        this.personalId = personalId;
-    }
-
-    public String getIssuePlace() {
-        return issuePlace;
-    }
-
-    public void setIssuePlace(String issuePlace) {
-        this.issuePlace = issuePlace;
-    }
-
-    public Date getIssueDate() {
-        return issueDate;
-    }
-
-    public void setIssueDate(Date issueDate) {
-        this.issueDate = issueDate;
-    }
-
-    public boolean isAccountExpired() {
-        return accountExpired;
-    }
-
-    public void setAccountExpired(boolean accountExpired) {
-        this.accountExpired = accountExpired;
-    }
-
-    public boolean isAccountLocked() {
-        return accountLocked;
-    }
-
-    public void setAccountLocked(boolean accountLocked) {
-        this.accountLocked = accountLocked;
-    }
-
-    public boolean isCredentialExpired() {
-        return credentialExpired;
-    }
-
-    public void setCredentialExpired(boolean credentialExpired) {
-        this.credentialExpired = credentialExpired;
-    }
-
-
     public String getGender() {
         return gender;
     }
@@ -253,24 +156,19 @@ public class User extends BaseEntity implements Serializable, UserDetails {
         this.gender = gender;
     }
 
-    public String getPersonalIdType() {
-        return personalIdType;
+    public DateTime getBirthDate() {
+        return birthDate;
     }
 
-    public void setPersonalIdType(String personalIdType) {
-        this.personalIdType = personalIdType;
+    public void setBirthDate(DateTime birthDate) {
+        this.birthDate = birthDate;
     }
 
-    public Date getTrackingDate() {
-        return trackingDate;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setTrackingDate(Date trackingDate) {
-        this.trackingDate = trackingDate;
-    }
-
-    @PrePersist
-    public void prePersist() {
-        trackingDate = new Date();
+    public void setAccount(Account account) {
+        this.account = account;
     }
 }

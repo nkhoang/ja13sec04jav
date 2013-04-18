@@ -5,6 +5,7 @@ import com.hnk.aws.model.validator.group.UserRegistrationCheck;
 import com.hnk.aws.repository.UserRepository;
 import com.hnk.aws.util.ValidationUtils;
 import junit.framework.Assert;
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -33,8 +34,7 @@ public class UserRepositoryTest extends BaseRepositoryTest {
     @Test
     public void testSaveUser() {
         User u = new User();
-        u.setBirthDate(new Date());
-        u.setUsername("nkhoang.it");
+        u.setBirthDate(new DateTime());
         u.setPassword(passwordEncoder.encodePassword("password", null));
         User savedUser = userRepository.save(u);
         Assert.assertNotNull(savedUser);
@@ -42,7 +42,7 @@ public class UserRepositoryTest extends BaseRepositoryTest {
 
     @Test
     public void testLoadUserByName() {
-        User u = (User) userRepository.loadUserByUsername("user01");
+        User u = (User) userRepository.loadUserByUsername("user01@user.com");
         Assert.assertNotNull(u);
         Assert.assertEquals("user01@user.com", u.getEmail());
     }

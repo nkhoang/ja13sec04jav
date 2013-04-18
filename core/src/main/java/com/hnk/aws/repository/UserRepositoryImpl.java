@@ -21,15 +21,15 @@ public class UserRepositoryImpl extends BaseDaoImpl implements UserDao {
     /**
      * load user by username.
      *
-     * @param username
+     * @param email
      * @return
      * @throws org.springframework.security.core.userdetails.UsernameNotFoundException
      */
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         QUser user = QUser.user;
-        User foundUser = getQuery().from(user).where(user.username.eq(username)).uniqueResult(user);
+        User foundUser = getQuery().from(user).where(user.email.eq(email)).uniqueResult(user);
         if (foundUser == null) {
-            throw new UsernameNotFoundException(String.format("Could not find username: %s", username));
+            throw new UsernameNotFoundException(String.format("Could not find username: %s", email));
         }
         return foundUser;
     }
