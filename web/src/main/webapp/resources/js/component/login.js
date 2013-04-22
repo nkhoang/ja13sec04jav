@@ -118,7 +118,7 @@ Ext.define('App.ux.Login', {
                         {
                             xtype : 'container',
                             itemId: 'googleLoginBtn',
-                            html : '<a id="googleLoginLink" href="#"><img src="/img/login-google.png" /></a>'
+                            html : '<a id="googleLoginLink" href="#"><img src="/resources/img/login-google.png" /></a>'
                         }
                     ]
                 },
