@@ -22,8 +22,8 @@ import java.util.Date;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath*:applicationContext-dao.xml",
         "classpath*:applicationContext-service.xml"})
-public class UserRepositoryTest extends BaseRepositoryTest {
-    private static final Logger LOG = LoggerFactory.getLogger(UserRepositoryTest.class.getCanonicalName());
+public class UserRepositorytest extends BaseRepositoryTest {
+    private static final Logger LOG = LoggerFactory.getLogger(UserRepositorytest.class.getCanonicalName());
     @Autowired
     private Validator validator;
     @Autowired
