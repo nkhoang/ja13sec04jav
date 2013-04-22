@@ -42,7 +42,7 @@ public class UserRepositoryTest extends BaseRepositoryTest {
 
     @Test
     public void testLoadUserByName() {
-        User u = (User) userRepository.loadUserByUsername("user01");
+        User u = (User) userRepository.loadUserByUsername("user01@user.com");
         Assert.assertNotNull(u);
         Assert.assertEquals("user01@user.com", u.getEmail());
     }

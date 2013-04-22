@@ -18,6 +18,8 @@
     <jpa:repositories base-package="com.hnk.aws.repository">
         <jpa:repository id="UserRepository" entity-manager-factory-ref="mainEntityManagerFactory"
                         transaction-manager-ref="mainTx" />
+        <jpa:repository id="AccountRepository" entity-manager-factory-ref="mainEntityManagerFactory"
+                        transaction-manager-ref="mainTx" />
         <jpa:repository id="UserGroupRepository" entity-manager-factory-ref="mainEntityManagerFactory"
                         transaction-manager-ref="mainTx" />
         <jpa:repository id="UserLogRepository" entity-manager-factory-ref="mainEntityManagerFactory"

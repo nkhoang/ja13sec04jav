@@ -1,7 +1,7 @@
 package com.hnk.aws.service;
 
+import com.hnk.aws.model.Account;
 import com.hnk.aws.model.User;
-import com.hnk.aws.model.UserLog;
 import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,19 +11,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.List;
-
 /**
  * @author hnguyen
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath*:applicationContext-dao.xml", "classpath*:applicationContext-service" +
-        ".xml"})
+@ContextConfiguration(locations = {"classpath*:applicationContext-dao.xml",
+        "classpath*:applicationContext-service.xml"})
 public class UserServiceTest {
     @Autowired
     private UserService userService;
     @Autowired
     private UserLogService userLogService;
+
     private static final Logger LOG = LoggerFactory.getLogger(UserServiceTest.class.getCanonicalName());
 
     @Test
@@ -33,17 +32,12 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testSaveUsers() {
-        try {
-            userService.saveUsers();
-        } catch (Exception ex) {
-            // check the result;
-            List<User> result = userService.list();
-            List<UserLog> userLogs = userLogService.list();
-            LOG.debug("Total users: " + result.size());
-            LOG.debug("Total user logs: " + userLogs.size());
-            Assert.assertNotNull(result);
-            Assert.assertEquals(1, result.size());
-        }
+    public void testCreateUserAccount() {
+        User user = userService.findByUsername("user01@user.com");
+        Assert.assertNotNull(user);
+
+        userService.createUserAccount(user, Account.AccountType.GOOGLE);
+        // check saved Account
+        Assert.assertTrue("Incorrect total accounts", userService.listAccounts().size() >= 1);
     }
 }

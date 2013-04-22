@@ -14,29 +14,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@SuppressWarnings({"JpaAttributeTypeInspection"})
-@Table(name = "TBL_USER")
-@Entity
+
 /**
  * @author hnguyen
  */
+@SuppressWarnings({"JpaAttributeTypeInspection"})
+@Table(name = "TBL_USER")
+@Entity
 @Access(value = AccessType.FIELD)
 public class User extends BaseEntity implements Serializable, UserDetails {
     @Id
     @Column(name = "USER_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @OneToOne(fetch = FetchType.EAGER, optional = false, targetEntity = Account.class, cascade = CascadeType.ALL, mappedBy = "user")
-    private Account account;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     @Column(name = "FIRST_NAME")
     @NotNull(groups = UserRegistrationCheck.class, message = "First name is required.")
@@ -51,12 +41,20 @@ public class User extends BaseEntity implements Serializable, UserDetails {
 
     @CheckPassword(groups = UserRegistrationCheck.class)
     private String password;
+
     private String email;
+
     private String phoneNumber;
+
     @Column(name = "BIRTH_DATE")
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime birthDate;
+
     private String gender;
+
+    @OneToOne(cascade = CascadeType.ALL, targetEntity = Account.class, fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "ACCOUNT_ID", referencedColumnName = "ACCOUNT_ID", unique = true, nullable = false)
+    private Account account;
 
     @Transient
     public Collection<GrantedAuthority> getAuthorities() {
@@ -69,29 +67,42 @@ public class User extends BaseEntity implements Serializable, UserDetails {
         return authorities;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
     @Override
     public String getUsername() {
-        return email;
+        return email;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return account.getAccountNonExpired();
+        return !account.getAccountExpired();
+        // Templates.
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return account.getAccountNonLocked();
+        return !account.getAccountLocked();
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return account.getCredentialsNonExpired();
+        return false;
     }
 
     @Override
     public boolean isEnabled() {
         return account.getEnabled();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getFirstName() {
@@ -118,11 +129,6 @@ public class User extends BaseEntity implements Serializable, UserDetails {
         this.middleName = middleName;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-
     public void setPassword(String password) {
         this.password = password;
     }
@@ -143,20 +149,20 @@ public class User extends BaseEntity implements Serializable, UserDetails {
         this.phoneNumber = phoneNumber;
     }
 
-    public DateTime getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(DateTime birthDate) {
-        this.birthDate = birthDate;
-    }
-
     public String getGender() {
         return gender;
     }
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public DateTime getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(DateTime birthDate) {
+        this.birthDate = birthDate;
     }
 
     public Account getAccount() {

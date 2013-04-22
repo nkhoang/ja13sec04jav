@@ -1,19 +1,18 @@
 package com.hnk.aws.service.impl;
 
+import com.hnk.aws.model.Account;
 import com.hnk.aws.model.User;
 import com.hnk.aws.model.UserGroup;
 import com.hnk.aws.model.UserLog;
+import com.hnk.aws.repository.AccountRepository;
 import com.hnk.aws.repository.UserGroupRepository;
 import com.hnk.aws.repository.UserLogRepository;
 import com.hnk.aws.repository.UserRepository;
 import com.hnk.aws.service.UserService;
-import org.apache.commons.lang.time.DateUtils;
 import org.jasypt.spring.security3.PasswordEncoder;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate4.HibernateOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,6 +33,23 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UserLogRepository userLogRepository;
+    @Autowired
+    private AccountRepository accountRepository;
+
+    /**
+     * {@inheritDoc}
+     */
+    public Account createUserAccount(User user, Account.AccountType accountType) {
+        Account account = new Account();
+        account.setAccountType(accountType);
+        account.setUser(user);
+        user.setAccount(account);
+
+        userRepository.save(user);
+
+        return account;
+    }
+
     @Override
     public List<UserGroup> listAllGroups() {
         return userGroupRepository.listAllGroups();
@@ -55,14 +71,9 @@ public class UserServiceImpl implements UserService {
         return savedU;
     }
 
-    public void saveUsers() {
-        for (int i = 0 ;i < 10; i++) {
-            save("nkhoang.it", "password");
-        }
-        User user = userRepository.findOne(1L);
-        userRepository.save(user);
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     public List<User> list() {
         List<User> users = new ArrayList<User>();
         Iterator<User> userIterator = userRepository.findAll().iterator();
@@ -70,5 +81,22 @@ public class UserServiceImpl implements UserService {
             users.add(userIterator.next());
         }
         return users;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public User findByUsername(String username) {
+        return userRepository.findByEmail(username);
+
+    }
+
+    public List<Account> listAccounts() {
+        Iterator<Account> accountIterator = accountRepository.findAll().iterator();
+        List<Account> accountList = new ArrayList<Account>();
+        while (accountIterator.hasNext()) {
+            accountList.add(accountIterator.next());
+        }
+        return accountList;
     }
 }

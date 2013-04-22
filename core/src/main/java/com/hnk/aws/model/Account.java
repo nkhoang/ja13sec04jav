@@ -9,9 +9,9 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "TBL_ACCOUNT")
-public class Account extends BaseEntity{
+public class Account extends BaseEntity {
     public enum AccountType {
-        LOGIN, GOOGLE, FACEBOOK
+        GOOGLE, LOGIN, FACEBOOK
     }
 
     @Id
@@ -19,21 +19,18 @@ public class Account extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(targetEntity = User.class, optional = false, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID", nullable = false, unique = true, referencedColumnName = "USER_ID")
-    private User user;
 
     @Column(name = "ACCOUNT_TYPE")
+    @Enumerated(EnumType.STRING)
     private AccountType accountType;
 
-    private Boolean isAccountNonExpired;
+    @OneToOne(fetch = FetchType.EAGER, targetEntity = User.class, mappedBy = "account")
+    private User user;
 
-    private Boolean isAccountNonLocked;
-
-    private Boolean isCredentialsNonExpired;
-
-    private Boolean isEnabled;
-
+    private Boolean accountLocked;
+    private Boolean accountExpired;
+    private Boolean credentialsExpired;
+    private Boolean enabled;
 
     public AccountType getAccountType() {
         return accountType;
@@ -51,43 +48,43 @@ public class Account extends BaseEntity{
         this.user = user;
     }
 
+    public Boolean getAccountLocked() {
+        return accountLocked;
+    }
+
+    public void setAccountLocked(Boolean accountLocked) {
+        this.accountLocked = accountLocked;
+    }
+
+    public Boolean getAccountExpired() {
+        return accountExpired;
+    }
+
+    public void setAccountExpired(Boolean accountExpired) {
+        this.accountExpired = accountExpired;
+    }
+
+    public Boolean getCredentialsExpired() {
+        return credentialsExpired;
+    }
+
+    public void setCredentialsExpired(Boolean credentialsExpired) {
+        this.credentialsExpired = credentialsExpired;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Boolean getAccountNonExpired() {
-        return isAccountNonExpired;
-    }
-
-    public void setAccountNonExpired(Boolean accountNonExpired) {
-        isAccountNonExpired = accountNonExpired;
-    }
-
-    public Boolean getAccountNonLocked() {
-        return isAccountNonLocked;
-    }
-
-    public void setAccountNonLocked(Boolean accountNonLocked) {
-        isAccountNonLocked = accountNonLocked;
-    }
-
-    public Boolean getCredentialsNonExpired() {
-        return isCredentialsNonExpired;
-    }
-
-    public void setCredentialsNonExpired(Boolean credentialsNonExpired) {
-        isCredentialsNonExpired = credentialsNonExpired;
-    }
-
-    public Boolean getEnabled() {
-        return isEnabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        isEnabled = enabled;
     }
 }
