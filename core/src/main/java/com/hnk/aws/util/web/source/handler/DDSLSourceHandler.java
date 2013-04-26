@@ -69,7 +69,7 @@ public class DDSLSourceHandler extends HTMLSourceHandler {
             for (Element imgElement : imgLinkElements) {
                 String link = imgElement.getAttributeValue("src");
                 if (StringUtils.isNotBlank(link)) {
-                    if (link.matches("(.)*(png|jpg)")) {
+                    if (link.matches("(.)*(png|jpg)(.)*")) {
                         // http://4.bp.blogspot.com/_e9dgDKlWdtU/TbEAhDILKEI/AAAAAAAABHE/nX1TxKViYXY/Hoi%2520011-DDSLT_011_01.jpg?imgmax=1600
                         Matcher matcher = Pattern.compile("(.)*(png|jpg)(.)*").matcher(link);
                         matcher.matches();

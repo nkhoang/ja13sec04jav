@@ -103,6 +103,15 @@ public class WebUtils {
         }
     }
 
+
+    public static boolean deleteFile(String localFilePath) {
+        if (FileUtils.checkFileExistence(localFilePath)) {
+            File f = new File(localFilePath);
+            return f.delete();
+        }
+        return false;
+    }
+
     /**
      * Save file from an URL to local disk path: {@code destinationDir } with the file name as {@code localFileName}
      *
@@ -119,10 +128,11 @@ public class WebUtils {
         URLConnection uCon = null;
 
         InputStream is = null;
+        int byteWritten = 0;
         try {
             URL Url;
             byte[] buf;
-            int byteRead, byteWritten = 0;
+            int byteRead;
             Url = new URL(fAddress);
             outStream = new BufferedOutputStream(new
                     FileOutputStream(destinationDir + "/" + localFileName));
@@ -136,6 +146,16 @@ public class WebUtils {
                     byteWritten += byteRead;
                 }
 
+                outStream.flush();
+                outStream.close();
+
+                if (byteWritten < 100000) {
+                    // small image. delete
+
+                    LOG.debug("Small image -> size: " + byteWritten);
+                    // delete
+                    WebUtils.deleteFile(destinationDir + "/" + localFileName);
+                }
                 if (LOG.isDebugEnabled()) {
                     LOG.debug(MessageFormat.format("Downloaded and saved file: {0}", localFileName));
                 }
