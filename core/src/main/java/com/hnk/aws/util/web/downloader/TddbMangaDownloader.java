@@ -15,6 +15,11 @@ public class TddbMangaDownloader extends MangaDownloader {
         super();
     }
 
+    @Override
+    protected DownloadStatus updateStatus(Object futureVal) {
+        return null;
+    }
+
     public void doRun() {
         // http://1.kangdm.com/comic_img/cj/jj/cn/SDMB/
         boolean shouldStop = false;
@@ -45,7 +50,7 @@ public class TddbMangaDownloader extends MangaDownloader {
                 final String localFileName = MessageFormat.format("{0}.jpg", pageCount);
 
                 if (WebUtils.checkImageUrl(imgUrl)) {
-                    result.add(taskExecutor.submit(new Callable<String>() {
+                    result.add(taskExecutor.submit(new Callable<Object>() {
                         public String call() throws Exception {
                             WebUtils.saveFile(imgUrl, localFileName, chapterPath);
                             return null;

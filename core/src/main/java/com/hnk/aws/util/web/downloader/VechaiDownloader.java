@@ -7,6 +7,7 @@ import org.apache.commons.collections.MapUtils;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
+import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.concurrent.Callable;
 
@@ -16,7 +17,7 @@ import java.util.concurrent.Callable;
 @Service
 public class VechaiDownloader extends MangaDownloader {
 
-    private int limit = 5;
+    private int limit = -1;
 
     public VechaiDownloader(ThreadPoolTaskExecutor taskExecutor, String folderPath,
             String matchedPattern, String cosmicHomeLink, String title) {
@@ -44,6 +45,7 @@ public class VechaiDownloader extends MangaDownloader {
             }
         });
         int limitCount = 0;
+        int taskCount = 0;
         for(String chapterKey: chapterNumbers) {
             final String chapterPath = folderPath + "/" + chapterKey;
             if (!FileUtils.checkFileExistence(chapterPath)) {
@@ -52,19 +54,41 @@ public class VechaiDownloader extends MangaDownloader {
                 if (MapUtils.isNotEmpty(imgMap)) {
                     for (final String imgName : imgMap.keySet()) {
                         if (WebUtils.checkImageUrl(imgMap.get(imgName))) {
-                            result.add(taskExecutor.submit(new Callable<String>() {
-                                public String call() throws Exception {
-                                    WebUtils.saveFile(imgMap.get(imgName), imgName, chapterPath);
-                                    return null;
+                            result.add(taskExecutor.submit(new Callable<Object>() {
+                                public Object call() throws Exception {
+                                    try {
+                                        WebUtils.saveFile(imgMap.get(imgName), imgName, chapterPath);
+                                    } catch (FileNotFoundException fnfex) {
+                                        LOG.error("File not found.", fnfex);
+                                        return false;
+                                    }
+                                    return true;
                                 }
                             }));
+                            // periodically check the futures.
+                            if (result.size() == FUTURE_CHECK_SIZE) {
+                                checkFutures();
+                            }
                         }
+                    }
+                    if (result.size() > 0) {
+                        // last check futures
+                        checkFutures();
                     }
                 }
                 ++limitCount;
-                if (limitCount > limit)
+                if (limit != -1 && limitCount > limit)
                     break;
             }
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public DownloadStatus updateStatus(Object futureVal) {
+        status.setProcessedCount(status.getProcessedCount() + 1);
+
+        return status;
     }
 }

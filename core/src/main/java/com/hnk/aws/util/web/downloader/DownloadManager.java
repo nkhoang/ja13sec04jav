@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 /**
@@ -21,21 +23,38 @@ import java.util.concurrent.Callable;
 public class DownloadManager {
     private final static Logger LOG = LoggerFactory.getLogger(DownloadManager.class.getCanonicalName());
 
-    @Autowired
-    private ThreadPoolTaskExecutor downloadExecutor;
+    @Autowired()
+    private ThreadPoolTaskExecutor downloaderExecutor;
+
+    private Map<String, MangaDownloader> runningDownloader = new HashMap<String, MangaDownloader>();
 
     /**
      *
      * @param downloader
      */
     public void createNewTask(final MangaDownloader downloader) {
-        downloadExecutor.submit(new Callable<Object>() {
+        downloaderExecutor.submit(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
-                downloader.run();
-                return null;
+                runningDownloader.put(downloader.getTitle(), downloader);
+                return downloader.run();
             }
         });
+    }
+
+    /**
+     * Get status of a download by title.
+     *
+     * @param title the title which may has a downloader running in background.
+     * @return
+     */
+    public DownloadStatus getStatus(String title) {
+        MangaDownloader downloader = runningDownloader.get(title);
+        if (downloader != null) {
+            return downloader.getStatus();
+        }
+
+        return null;
     }
 
 }

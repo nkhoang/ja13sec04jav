@@ -14,6 +14,7 @@ import java.util.concurrent.Future;
 @Service
 public abstract class MangaDownloader {
     protected final Logger LOG = LoggerFactory.getLogger(this.getClass().getCanonicalName());
+    protected final int FUTURE_CHECK_SIZE = 10;
 
     protected String folderPath;
     protected String matchedPattern;
@@ -22,7 +23,8 @@ public abstract class MangaDownloader {
     protected String title;
 
     protected ThreadPoolTaskExecutor taskExecutor;
-    protected List<Future<String>> result = new ArrayList<Future<String>>();
+    protected List<Future<Object>> result = new ArrayList<Future<Object>>();
+    protected DownloadStatus status;
 
     public MangaDownloader() {
     }
@@ -37,22 +39,30 @@ public abstract class MangaDownloader {
         this.folderPath = folderPath;
         this.matchedPattern = matchedPattern;
         this.mangaHomeLink = mangaHomeLink;
+
+        status = new DownloadStatus();
+        status.setProcessId(title);
     }
 
 
-    public void run() {
+    public Object run() {
         LOG.info(this.getClass().getCanonicalName() + " started...");
         doRun();
-        checkFutures();
+
+        return status;
     }
+
+    protected abstract DownloadStatus updateStatus(Object futureVal);
+
 
     protected void checkFutures() {
         if (CollectionUtils.isNotEmpty(result)) {
-            for (Future<String> future : result) {
+            for (Future<Object> future : result) {
                 try {
-                    String futureVal = future.get();
+                    Object futureVal = future.get();
+                    updateStatus(futureVal);
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug(MessageFormat.format("Value from future: {0}", futureVal));
+                        LOG.debug(MessageFormat.format("Value from future: {0}", futureVal.toString()));
                     }
                 } catch (Exception ex) {
                     LOG.error("Exception", ex);
@@ -75,5 +85,13 @@ public abstract class MangaDownloader {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public DownloadStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(DownloadStatus status) {
+        this.status = status;
     }
 }
