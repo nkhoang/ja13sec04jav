@@ -3,28 +3,40 @@ package com.hnk.aws.util.web.downloader;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.stereotype.Service;
 
-import java.io.FileNotFoundException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.Future;
 
-public abstract class ComicDownloader {
-    private static final int THREAD_POOL_QUEUE_SIZE = 60;
-    private static final int THREAD_POOL_KEEP_ALIVE_TIME = 0;
-    private static final int THREAD_POOL_MAX_SIZE = 30;
-    private static final int THREAD_POOL_CORE_SIZE = 20;
-
+@Service
+public abstract class MangaDownloader {
     protected final Logger LOG = LoggerFactory.getLogger(this.getClass().getCanonicalName());
+
+    protected String folderPath;
+    protected String matchedPattern;
+    protected String mangaHomeLink;
+    // manga title.
+    protected String title;
+
+    protected ThreadPoolTaskExecutor taskExecutor;
     protected List<Future<String>> result = new ArrayList<Future<String>>();
 
-    protected ExecutorService executor;
+    public MangaDownloader() {
+    }
 
-    public ComicDownloader() {
-        executor = new ThreadPoolExecutor(
-                THREAD_POOL_CORE_SIZE, THREAD_POOL_MAX_SIZE, THREAD_POOL_KEEP_ALIVE_TIME, TimeUnit.SECONDS,
-                new ArrayBlockingQueue<Runnable>(THREAD_POOL_QUEUE_SIZE), new ThreadPoolExecutor.CallerRunsPolicy());
+    /**
+     * @param matchedPattern e.g. ^http://(.)*vechai\\.info(.)*(song)(.)*(long)(.)*
+     * @param mangaHomeLink e.g. http://vechai.info/Dai-duong-song-long/
+     */
+
+    public MangaDownloader(String title, String folderPath, String matchedPattern, String mangaHomeLink) {
+        this.title = title;
+        this.folderPath = folderPath;
+        this.matchedPattern = matchedPattern;
+        this.mangaHomeLink = mangaHomeLink;
     }
 
 
@@ -51,5 +63,17 @@ public abstract class ComicDownloader {
         }
     }
 
+    /**
+     * Do actual work.
+     */
     public abstract void doRun();
+
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 }

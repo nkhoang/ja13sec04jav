@@ -19,10 +19,10 @@ public class TddbSourceHandler extends HTMLSourceHandler {
     /**
      * {@inheritDoc}
      */
-    public List<String> extractUrls(InputStream is, Map<String, Object> data) throws SourceHandlerException {
+    public List<String> extractUrls(InputStream is, Map<String, Object> data, String matchedPattern) throws SourceHandlerException {
         try {
             Source source = new Source(is);
-            return extractUrls(source, data);
+            return extractUrls(source, data, matchedPattern);
         } catch (IOException ioe) {
             throw new SourceHandlerException("Could not build Source from InputStream", ioe);
         }
@@ -31,7 +31,7 @@ public class TddbSourceHandler extends HTMLSourceHandler {
     /**
      * {@inheritDoc}
      */
-    public List<String> extractUrls(Source source, Map<String, Object> data) throws SourceHandlerException {
+    public List<String> extractUrls(Source source, Map<String, Object> data, String matchedPattern) throws SourceHandlerException {
         if (source != null) {
             List<String> result = new ArrayList<String>();
             // get links container

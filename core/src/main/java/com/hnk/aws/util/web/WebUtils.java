@@ -71,7 +71,8 @@ public class WebUtils {
      * @param theUrl the url to fetch images.
      * @return the list of image urls.
      */
-    public static Map<String, String> getLinkTitleMapping(String theUrl, HTMLSourceHandler handler) {
+    public static Map<String, String> getLinkTitleMapping(String theUrl, String matchedPattern,
+            HTMLSourceHandler handler) {
         try {
             if (LOG.isDebugEnabled()) {
                 LOG.debug(MessageFormat.format("# Connecting to {0} to get links", theUrl));
@@ -85,7 +86,7 @@ public class WebUtils {
             InputStream is = connection.getInputStream();
             Map<String, String> result = new HashMap<String, String>();
             Map<String, Object> data = new HashMap<String, Object>();
-            handler.extractUrls(is, data);
+            handler.extractUrls(is, data, matchedPattern);
             // check if the link is relative
             if (MapUtils.isNotEmpty(data)) {
                 for (String key : data.keySet()) {

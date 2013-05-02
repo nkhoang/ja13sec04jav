@@ -2,20 +2,35 @@ package com.hnk.aws.util.web.downloader;
 
 import com.hnk.aws.util.file.FileUtils;
 import com.hnk.aws.util.web.WebUtils;
-import com.hnk.aws.util.web.source.handler.DDSLSourceHandler;
+import com.hnk.aws.util.web.source.handler.VechaiSourceHandler;
 import org.apache.commons.collections.MapUtils;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.Callable;
 
-public class DDSLDownloader  extends ComicDownloader {
+/**
+ * Downloader for Dai Duong Song Long cosmic title.
+ */
+@Service
+public class VechaiDownloader extends MangaDownloader {
 
-    private static final String COSMIC_HOME_LINK = "http://vechai.info/Dai-duong-song-long/";
+    private int limit = 5;
 
+    public VechaiDownloader(ThreadPoolTaskExecutor taskExecutor, String folderPath,
+            String matchedPattern, String cosmicHomeLink, String title) {
+        super(title, folderPath, matchedPattern, cosmicHomeLink);
+        this.taskExecutor = taskExecutor;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void doRun() {
-        Map<String, String> links = WebUtils.getLinkTitleMapping(COSMIC_HOME_LINK, new DDSLSourceHandler());
-        String folderPath = "D:/download/TDDB";
+        Map<String, String> links = WebUtils.getLinkTitleMapping(mangaHomeLink, matchedPattern,
+                new VechaiSourceHandler());
         FileUtils.createFolder(folderPath);
         // sort chapter key
         List<String> chapterNumbers = new ArrayList<String>(links.keySet());
@@ -28,15 +43,16 @@ public class DDSLDownloader  extends ComicDownloader {
                 return 0;
             }
         });
+        int limitCount = 0;
         for(String chapterKey: chapterNumbers) {
             final String chapterPath = folderPath + "/" + chapterKey;
             if (!FileUtils.checkFileExistence(chapterPath)) {
                 FileUtils.createFolder(chapterPath);
-                final Map<String, String> imgMap = WebUtils.getLinks(links.get(chapterKey), new DDSLSourceHandler());
+                final Map<String, String> imgMap = WebUtils.getLinks(links.get(chapterKey), new VechaiSourceHandler());
                 if (MapUtils.isNotEmpty(imgMap)) {
                     for (final String imgName : imgMap.keySet()) {
                         if (WebUtils.checkImageUrl(imgMap.get(imgName))) {
-                            result.add(executor.submit(new Callable<String>() {
+                            result.add(taskExecutor.submit(new Callable<String>() {
                                 public String call() throws Exception {
                                     WebUtils.saveFile(imgMap.get(imgName), imgName, chapterPath);
                                     return null;
@@ -45,6 +61,9 @@ public class DDSLDownloader  extends ComicDownloader {
                         }
                     }
                 }
+                ++limitCount;
+                if (limitCount > limit)
+                    break;
             }
         }
     }

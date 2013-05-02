@@ -19,20 +19,23 @@ public abstract class HTMLSourceHandler {
     /**
      * Extract image links from HTML source in form of a stream.
      *
-     * @param is the {@code InputStream} instance.
+     * @param is             the {@code InputStream} instance.
+     * @param data
+     * @param matchedPattern
      * @return a list of links.
      * @throws SourceHandlerException if any.
      */
-    public abstract List<String> extractUrls(InputStream is, Map<String, Object> data) throws SourceHandlerException;
+    public abstract List<String> extractUrls(InputStream is, Map<String, Object> data, String matchedPattern)
+            throws SourceHandlerException;
 
     /**
      * @param source the {@code Source} instance.
      * @return a list of links
      * @throws SourceHandlerException if any.
-     * @see #extractUrls(java.io.InputStream, java.util.Map)
+     * @see #extractUrls(java.io.InputStream, java.util.Map, java.lang.String)
      */
-    public abstract List<String> extractUrls(Source source, Map<String, Object> data) throws
-            SourceHandlerException;
+    public abstract List<String> extractUrls(Source source, Map<String, Object> data, String matchedPattern)
+            throws SourceHandlerException;
 
 
     public abstract List<String> extractImgUrls(Source source, Map<String, Object> data) throws

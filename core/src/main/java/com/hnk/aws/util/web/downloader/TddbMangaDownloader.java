@@ -10,8 +10,8 @@ import java.util.concurrent.Callable;
 /**
  * TDDB Downloader.
  */
-public class TddbComicDownloader extends ComicDownloader {
-    public TddbComicDownloader() {
+public class TddbMangaDownloader extends MangaDownloader {
+    public TddbMangaDownloader() {
         super();
     }
 
@@ -45,7 +45,7 @@ public class TddbComicDownloader extends ComicDownloader {
                 final String localFileName = MessageFormat.format("{0}.jpg", pageCount);
 
                 if (WebUtils.checkImageUrl(imgUrl)) {
-                    result.add(executor.submit(new Callable<String>() {
+                    result.add(taskExecutor.submit(new Callable<String>() {
                         public String call() throws Exception {
                             WebUtils.saveFile(imgUrl, localFileName, chapterPath);
                             return null;

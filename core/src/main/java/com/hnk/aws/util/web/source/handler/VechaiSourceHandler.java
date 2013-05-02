@@ -16,16 +16,14 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class DDSLSourceHandler extends HTMLSourceHandler {
-    private static final String LINKS_CONTAINER_ID = "comiczj";
-
+public class VechaiSourceHandler extends HTMLSourceHandler {
     /**
      * {@inheritDoc}
      */
-    public List<String> extractUrls(InputStream is, Map<String, Object> data) throws SourceHandlerException {
+    public List<String> extractUrls(InputStream is, Map<String, Object> data, String matchedPattern) throws SourceHandlerException {
         try {
             Source source = new Source(is);
-            return extractUrls(source, data);
+            return extractUrls(source, data, matchedPattern);
         } catch (IOException ioe) {
             throw new SourceHandlerException("Could not build Source from InputStream", ioe);
         }
@@ -34,7 +32,7 @@ public class DDSLSourceHandler extends HTMLSourceHandler {
     /**
      * {@inheritDoc}
      */
-    public List<String> extractUrls(Source source, Map<String, Object> data) throws SourceHandlerException {
+    public List<String> extractUrls(Source source, Map<String, Object> data, String matchedPattern) throws SourceHandlerException {
         if (source != null) {
             List<String> result = new ArrayList<String>();
 
@@ -46,7 +44,8 @@ public class DDSLSourceHandler extends HTMLSourceHandler {
                 chapterName = chapterName.replaceAll("\\D+", "");
                 String link = linkElement.getAttributeValue("href");
                 if (StringUtils.isNotBlank(link)) {
-                    if (link.matches("^http://(.)*vechai\\.info(.)*(song)(.)*(long)(.)*")) {
+                    // if (link.matches("^http://(.)*vechai\\.info(.)*(song)(.)*(long)(.)*")) {
+                    if (link.matches(matchedPattern)) {
                         result.add(link);
                         data.put(chapterName, link);
                     }
@@ -70,7 +69,6 @@ public class DDSLSourceHandler extends HTMLSourceHandler {
                 String link = imgElement.getAttributeValue("src");
                 if (StringUtils.isNotBlank(link)) {
                     if (link.matches("(.)*(png|jpg)(.)*")) {
-                        // http://4.bp.blogspot.com/_e9dgDKlWdtU/TbEAhDILKEI/AAAAAAAABHE/nX1TxKViYXY/Hoi%2520011-DDSLT_011_01.jpg?imgmax=1600
                         Matcher matcher = Pattern.compile("(.)*(png|jpg)(.)*").matcher(link);
                         matcher.matches();
                         String fileName = count++ + link.substring(matcher.start(1), matcher.start(1) + 4);
