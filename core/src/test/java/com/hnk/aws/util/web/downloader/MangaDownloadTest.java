@@ -43,7 +43,7 @@ public class MangaDownloadTest {
                 "^http://(.)*vechai\\.info(.)*(song)(.)*(long)(.)*", "http://vechai.info/Dai-duong-song-long/", "DDSL");
         downloadManager.createNewTask(downloader);
 
-        Thread a = new Thread(new Runnable() {
+        /*Thread a = new Thread(new Runnable() {
             @Override
             public void run() {
                 int count = 0;
@@ -60,7 +60,7 @@ public class MangaDownloadTest {
                 } while (count < 1000);
             }
         });
-        a.start();
+        a.start();*/
 
         Thread.sleep(1000000);
     }

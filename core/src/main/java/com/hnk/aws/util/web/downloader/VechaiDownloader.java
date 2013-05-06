@@ -58,6 +58,8 @@ public class VechaiDownloader extends MangaDownloader {
                                 public Object call() throws Exception {
                                     try {
                                         WebUtils.saveFile(imgMap.get(imgName), imgName, chapterPath);
+                                        status.setProcessedCount(status.getProcessedCount() + 1);
+
                                     } catch (FileNotFoundException fnfex) {
                                         LOG.error("File not found.", fnfex);
                                         return false;
@@ -65,30 +67,15 @@ public class VechaiDownloader extends MangaDownloader {
                                     return true;
                                 }
                             }));
-                            // periodically check the futures.
-                            if (result.size() == FUTURE_CHECK_SIZE) {
-                                checkFutures();
-                            }
                         }
                     }
-                    if (result.size() > 0) {
-                        // last check futures
-                        checkFutures();
-                    }
+                    // check futures at the end of each chapter.
+                    checkFutures(chapterPath);
                 }
                 ++limitCount;
                 if (limit != -1 && limitCount > limit)
                     break;
             }
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public DownloadStatus updateStatus(Object futureVal) {
-        status.setProcessedCount(status.getProcessedCount() + 1);
-
-        return status;
     }
 }

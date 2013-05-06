@@ -14,7 +14,6 @@ import java.util.concurrent.Future;
 @Service
 public abstract class MangaDownloader {
     protected final Logger LOG = LoggerFactory.getLogger(this.getClass().getCanonicalName());
-    protected final int FUTURE_CHECK_SIZE = 10;
 
     protected String folderPath;
     protected String matchedPattern;
@@ -52,23 +51,17 @@ public abstract class MangaDownloader {
         return status;
     }
 
-    protected abstract DownloadStatus updateStatus(Object futureVal);
 
-
-    protected void checkFutures() {
+    protected void checkFutures(String chapterTitle) {
         if (CollectionUtils.isNotEmpty(result)) {
             for (Future<Object> future : result) {
                 try {
                     Object futureVal = future.get();
-                    updateStatus(futureVal);
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug(MessageFormat.format("Value from future: {0}", futureVal.toString()));
-                    }
                 } catch (Exception ex) {
                     LOG.error("Exception", ex);
                 }
             }
-
+            LOG.debug(String.format("Chapter <%s> is completed", chapterTitle));
             result.clear();
         }
     }

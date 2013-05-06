@@ -15,11 +15,6 @@ public class TddbMangaDownloader extends MangaDownloader {
         super();
     }
 
-    @Override
-    protected DownloadStatus updateStatus(Object futureVal) {
-        return null;
-    }
-
     public void doRun() {
         // http://1.kangdm.com/comic_img/cj/jj/cn/SDMB/
         boolean shouldStop = false;
@@ -64,7 +59,7 @@ public class TddbMangaDownloader extends MangaDownloader {
                 }
 
                 if (result.size() == 20) {
-                    checkFutures();
+                    checkFutures(null);
                 }
 
                 pageCount++;
