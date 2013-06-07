@@ -1,7 +1,6 @@
 package com.hnk.aws.service;
 
 import com.hnk.aws.model.UserLog;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;

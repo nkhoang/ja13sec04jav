@@ -82,7 +82,7 @@ public class WebUtils {
             connection.setReadTimeout(10000);
             connection.setRequestMethod("GET");
 
-            // get inputStream
+            // get InputStream
             InputStream is = connection.getInputStream();
             Map<String, String> result = new HashMap<String, String>();
             Map<String, Object> data = new HashMap<String, Object>();
@@ -91,15 +91,17 @@ public class WebUtils {
             if (MapUtils.isNotEmpty(data)) {
                 for (String key : data.keySet()) {
                     if (!data.get(key).toString().matches("http(.)*")) {
+                        // append it to the theUrl to form a full URL.
                         result.put(key, theUrl + data.get(key));
                     } else {
+                        // it is a full URL.
                         result.put(key, data.get(key).toString());
                     }
                 }
             }
             return result;
         } catch (Exception e) {
-            LOG.error(MessageFormat.format("Could not links from {0}.", theUrl), e);
+            LOG.error(MessageFormat.format("Could not get links from {0}.", theUrl), e);
             return null;
         }
     }

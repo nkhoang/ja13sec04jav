@@ -2,37 +2,35 @@ package com.hnk.aws.util.web.downloader;
 
 import com.hnk.aws.util.file.FileUtils;
 import com.hnk.aws.util.web.WebUtils;
-import com.hnk.aws.util.web.source.handler.VechaiSourceHandler;
+import com.hnk.aws.util.web.source.handler.DDSLSourceHandler;
 import org.apache.commons.collections.MapUtils;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.stereotype.Service;
 
-import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.concurrent.Callable;
 
-/**
- * Downloader for Dai Duong Song Long cosmic title.
- */
-@Service
-public class VechaiDownloader extends MangaDownloader {
+public class VechaiDownloader extends ComicDownloader {
 
-    private int limit = -1;
+    private String rootDir;
+    private String homeLink;
+    private String linkPattern;
 
-    public VechaiDownloader(ThreadPoolTaskExecutor taskExecutor, String folderPath,
-            String matchedPattern, String cosmicHomeLink, String title) {
-        super(title, folderPath, matchedPattern, cosmicHomeLink);
-        this.taskExecutor = taskExecutor;
-    }
+    // private static final String COSMIC_HOME_LINK = "http://vechai.info/Dai-duong-song-long/";
 
     /**
-     * {@inheritDoc}
+     * Construct Downloader with configured root directory.
+     *
+     * @param rootDir
      */
+    public VechaiDownloader(String rootDir, String cosmicHomeLink, String linkPattern) {
+        this.rootDir = rootDir;
+        this.homeLink = cosmicHomeLink;
+        this.linkPattern = linkPattern;
+    }
+
     @Override
     public void doRun() {
-        Map<String, String> links = WebUtils.getLinkTitleMapping(mangaHomeLink, matchedPattern,
-                new VechaiSourceHandler());
-        FileUtils.createFolder(folderPath);
+        Map<String, String> links = WebUtils.getLinkTitleMapping(homeLink, new DDSLSourceHandler(linkPattern));
+        FileUtils.createFolder(rootDir);
         // sort chapter key
         List<String> chapterNumbers = new ArrayList<String>(links.keySet());
         Collections.sort(chapterNumbers, new Comparator<String>() {
@@ -44,37 +42,23 @@ public class VechaiDownloader extends MangaDownloader {
                 return 0;
             }
         });
-        int limitCount = 0;
-        int taskCount = 0;
-        for(String chapterKey: chapterNumbers) {
-            final String chapterPath = folderPath + "/" + chapterKey;
+        for (String chapterKey : chapterNumbers) {
+            final String chapterPath = rootDir + "/" + chapterKey;
             if (!FileUtils.checkFileExistence(chapterPath)) {
                 FileUtils.createFolder(chapterPath);
-                final Map<String, String> imgMap = WebUtils.getLinks(links.get(chapterKey), new VechaiSourceHandler());
+                final Map<String, String> imgMap = WebUtils.getLinks(links.get(chapterKey), new DDSLSourceHandler(linkPattern));
                 if (MapUtils.isNotEmpty(imgMap)) {
                     for (final String imgName : imgMap.keySet()) {
                         if (WebUtils.checkImageUrl(imgMap.get(imgName))) {
-                            result.add(taskExecutor.submit(new Callable<Object>() {
-                                public Object call() throws Exception {
-                                    try {
-                                        WebUtils.saveFile(imgMap.get(imgName), imgName, chapterPath);
-                                        status.setProcessedCount(status.getProcessedCount() + 1);
-
-                                    } catch (FileNotFoundException fnfex) {
-                                        LOG.error("File not found.", fnfex);
-                                        return false;
-                                    }
-                                    return true;
+                            taskQueue.add(executor.submit(new Callable<String>() {
+                                public String call() throws Exception {
+                                    WebUtils.saveFile(imgMap.get(imgName), imgName, chapterPath);
+                                    return null;
                                 }
                             }));
                         }
                     }
-                    // check futures at the end of each chapter.
-                    checkFutures(chapterPath);
                 }
-                ++limitCount;
-                if (limit != -1 && limitCount > limit)
-                    break;
             }
         }
     }

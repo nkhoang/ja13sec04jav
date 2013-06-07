@@ -4,12 +4,10 @@ import com.hnk.aws.util.web.exception.SourceHandlerException;
 import com.hnk.aws.util.web.source.HTMLSourceHandler;
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.Source;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
