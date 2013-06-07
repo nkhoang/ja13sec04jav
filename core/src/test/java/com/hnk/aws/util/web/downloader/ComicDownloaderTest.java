@@ -5,15 +5,7 @@ import org.junit.Test;
 /**
  * Test class for ComicDownloader.
  */
-public class .scssComicDownloaderTest {
-    @Test
-    public void testRun() {
-        ComicDownloader downloader = new TddbComicDownloader();
-        downloader.run();
-    }
-
-
-
+public class ComicDownloaderTest {
     @Test
     public void testDownloadDDSL() throws Exception {
         ComicDownloader downloader = new VechaiDownloader("/Users/nkhoangit/Downloads/cosmic/XTCH/",
